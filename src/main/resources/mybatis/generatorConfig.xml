@@ -8,9 +8,12 @@
     <!--<classPathEntry location="D:\apache-maven-3.6.0-bin\maven-repository\com\oracle\ojdbc14\10.2.0.4.0\ojdbc14-10.2.0.4.0.jar" />-->
     <context id="context1" targetRuntime="MyBatis3">
         <commentGenerator>
-<!--            <property name="suppressDate" value="true"/>-->
-<!--            <property name="suppressAllComments" value="true"/>-->
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
         </commentGenerator>
+
+        <plugin type="com.citycloud.ccuap.ybhw.util.mybatisGeneratorPlugin"/>
+
         <!-- 数据库连接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://10.12.107.89:3306/ybhw_db"
