@@ -13,7 +13,19 @@ public class PageInfoAdapter<T> extends PageImpl<T> {
     }
 
     public <E> PageInfoAdapter(Page<E> page, List<T> result) {
+
         super(result, PageRequest.of(page.getPageNum() - 1, page.getPageSize()), page.getTotal());
+    }
+
+    public PageInfoAdapter(List<T> result) {
+
+        super(result, PageRequest.of(1, result != null && !result.isEmpty() ? result.size() : 10), result != null ? result.size() : 0);
+    }
+
+
+    public PageInfoAdapter(int page, int size, int total, List<T> result) {
+
+        super(result, PageRequest.of(page - 1, size), total);
     }
 
 }

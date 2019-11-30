@@ -7,8 +7,14 @@
  */
 package com.citycloud.ccuap.ybhw.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @ClassName: StringUtils
@@ -21,6 +27,49 @@ public class StringUtils {
 
 	
 	
+	public static void main(String[] args) {
+		List<String> strs = new ArrayList<>();
+		strs.add("base64_1");
+		strs.add("base64_2");
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("tf_device_id", "12123123");
+		map.put("Warn_time", "2011-11-11 12:12:12");
+		map.put("Warn_type", "1000");
+		map.put("Warn_addr", "宜宾");
+		map.put("Warn_entity", "沙县小吃");
+		map.put("Warn_img", strs);
+		
+		Map<String,Object> map1 = new HashMap<>();
+		map1.put("tf_device_id", "12123123");
+		map1.put("Warn_time", "2011-11-11 12:12:12");
+		map1.put("Warn_type", "1000");
+		map1.put("Warn_addr", "宜宾");
+		map1.put("Warn_entity", "川A88888");
+		map1.put("Warn_img", strs);
+		
+		
+		Map<String,Object> map2 = new HashMap<>();
+		map2.put("tf_device_id", "12123123");
+		map2.put("Warn_time", "2011-11-11 12:12:12");
+		map2.put("Warn_type", "1000");
+		map2.put("Warn_addr", "宜宾");
+		map2.put("Warn_entity", "乱丢垃圾");
+		map2.put("Warn_img", strs);
+		
+		 List<Map<String,Object>> list = new ArrayList<>();
+		 list.add(map);
+		 list.add(map1);
+		 list.add(map2);
+		 
+		 JSONObject json = new JSONObject();
+		 json.put("datas",list);
+		 json.put("code", 200);
+		 json.put("msg", "SUCCESS");
+		 
+		 System.out.println(json.toJSONString());
+		
+	}
 	
 	public static boolean isContainChinese(String str) {
 		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
@@ -51,7 +100,7 @@ public class StringUtils {
 		}
 		Integer i = null;
 		try {
-			i = (Integer)obj;
+			i = Integer.valueOf(valueOf(obj));
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;

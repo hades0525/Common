@@ -1,8 +1,14 @@
 package com.citycloud.ccuap.ybhw.util;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.PluginAdapter;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
+
+import java.util.*;
 
 /**
  * A MyBatis Generator plugin to use Lombok's annotations.

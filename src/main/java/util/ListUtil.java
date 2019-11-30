@@ -188,7 +188,7 @@ public class ListUtil {
     /**
      * remove one
      */
-    public static <T> boolean toRemoveO(List<T> list, T o) {
+    public static <T> boolean toRemoveObject(List<T> list, T o) {
         boolean result = false;
         if (list != null) {
             if (o instanceof Integer) {
