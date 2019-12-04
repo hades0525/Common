@@ -10,6 +10,7 @@ package com.citycloud.ccuap.ybhw.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,34 +46,33 @@ public class FileUtils {
 	 */
 	public static String uploadFileImg(MultipartFile fileImg, String paths) {
 		// TODO Auto-generated method stub
-		log.warn("-------保存路径------"+paths);
+		log.warn("-------保存路径------" + paths);
 		String path = "";
 		if (null == fileImg || null == paths) {
 			return path;
 		}
 		String fileName = fileImg.getOriginalFilename();
-		
-		String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
-		String subName = fileName.substring(0, fileName.lastIndexOf("."));//截取名字
-		String name = new StringBuilder()
-				.append(subName).append("_").append(System.currentTimeMillis())
-				.append(".").append(fileType).toString().trim();
+
+		String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+		String subName = fileName.substring(0, fileName.lastIndexOf("."));// 截取名字
+		String name = new StringBuilder().append(subName).append("_").append(System.currentTimeMillis()).append(".")
+				.append(fileType).toString().trim();
 		File file = new File(paths + name);
 		File parent = file.getParentFile();
-		if(!parent.exists()){
+		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		
-			if(!file.exists()){
-				try {
-					file.createNewFile();
-					fileImg.transferTo(file);
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+				fileImg.transferTo(file);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+		}
 
 		return paths + name;
 	}
@@ -81,30 +81,30 @@ public class FileUtils {
 	 * @param filePath
 	 * @param response
 	 */
-	public static void resFile(String filePath, HttpServletResponse response,String contentType) {
+	public static void resFile(String filePath, HttpServletResponse response, String contentType) {
 		// TODO Auto-generated method stub
-		
+
 		FileInputStream fis = null;
-        response.setContentType(contentType);
-        try {
-            OutputStream out = response.getOutputStream();
-            File file = new File(filePath);
-            fis = new FileInputStream(file);
-            byte[] b = new byte[fis.available()];
-            fis.read(b);
-            out.write(b);
-            out.flush();
-        } catch (Exception e) {
-             e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                   fis.close();
-                } catch (IOException e) {
-                e.printStackTrace();
-            }   
-              }
-        }
+		response.setContentType(contentType);
+		try {
+			OutputStream out = response.getOutputStream();
+			File file = new File(filePath);
+			fis = new FileInputStream(file);
+			byte[] b = new byte[fis.available()];
+			fis.read(b);
+			out.write(b);
+			out.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	/**
@@ -114,21 +114,22 @@ public class FileUtils {
 	 */
 	public static void batchUploadImg(String ids, MultipartFile[] fileImg, String string) {
 		// TODO Auto-generated method stub
-		if(null == fileImg || null == string){
+		if (null == fileImg || null == string) {
 			return;
 		}
-		ImgInfoMapper imgInfoMapper = (ImgInfoMapper)SpringContextUtils.getBean("imgInfoMapper");
-		List<Map<String,String>> list = new ArrayList<>();
-		for(MultipartFile file :fileImg){
-			if(null == file || file.isEmpty()){
+		ImgInfoMapper imgInfoMapper = (ImgInfoMapper) SpringContextUtils.getBean("imgInfoMapper");
+		List<Map<String, String>> list = new ArrayList<>();
+		for (MultipartFile file : fileImg) {
+			if (null == file || file.isEmpty()) {
 				continue;
 			}
-			
-			String path = uploadFileImg(file, string);//返回绝对路径
-			
-			Map<String,String> param = new HashMap<>();
-//			String fileName = file.getOriginalFilename();
-//			String subFile = fileName.substring(0, fileName.lastIndexOf("."));//截取文件名字
+
+			String path = uploadFileImg(file, string);// 返回绝对路径
+
+			Map<String, String> param = new HashMap<>();
+			// String fileName = file.getOriginalFilename();
+			// String subFile = fileName.substring(0,
+			// fileName.lastIndexOf("."));//截取文件名字
 			param.put("ids", ids);
 			param.put("path", path);
 			param.put("img_desc", "维保凭证");
@@ -136,30 +137,30 @@ public class FileUtils {
 			list.add(param);
 		}
 		imgInfoMapper.insertImgInfo(list);
-		
+
 	}
-	
-	public static String imgTransferBase64(String path){
-		
-		if(StringUtils.isEmpty(path))
+
+	public static String imgTransferBase64(String path) {
+
+		if (StringUtils.isEmpty(path))
 			return "";
 		File file = new File(path);
-		if(!file.exists())
+		if (!file.exists())
 			return "";
-		byte []data = null;
+		byte[] data = null;
 		InputStream ist = null;
-		
+
 		try {
 			ist = new FileInputStream(file);
 			data = new byte[ist.available()];
 			ist.read(data);
-			
-		} catch ( IOException e) {
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("读取文件失败");
 			e.printStackTrace();
-		}finally{
-			if(null != ist){
+		} finally {
+			if (null != ist) {
 				try {
 					ist.close();
 				} catch (IOException e) {
@@ -169,10 +170,57 @@ public class FileUtils {
 				}
 			}
 		}
-		
+
 		String code = Base64.encodeBase64String(Objects.requireNonNull(data));
-		
+
 		return code;
-	} 
+	}
+
+	public static String base64TransferImg(String base64, String path) {
+		log.warn("***********图片文件base64转存图片地址**************" + path);
+		if (StringUtils.isEmpty(path) || StringUtils.isEmpty(base64)) {
+			log.error("[]************文件路径或者base64为空");
+			return "";
+		}
+		File file = new File(path);
+		File parent = file.getParentFile();
+		// 父级目录不存在先创建父级目录
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+		OutputStream os = null;
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+				os = new FileOutputStream(file);
+				byte [] bytes = Base64.decodeBase64(Objects.requireNonNull(base64));
+				//转换异常base数据
+				for(byte b :bytes){
+					if(b<0)
+						b += 256;
+				}
+				
+				os.write(bytes);
+				os.flush();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				log.error("********文件操作失败**********");
+				e.printStackTrace();
+			}finally {
+				if(null != os){
+					try {
+						os.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						log.error("输出流关闭失败");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		return path;
+	}
 
 }
