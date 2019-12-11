@@ -1,0 +1,68 @@
+<assembly>
+
+    <!--id 标识符，添加到生成文件名称的后缀符。如果指定 id 的话，目标文件则是 ${artifactId}-${id}.tar.gz-->
+    <id>pkg</id>
+
+    <!--打包格式-->
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <!-- 将项目中src/main/resources/bin目录下的脚本文件copy到target目录的bin目录下 -->
+            <directory>src/main/resources/bin</directory>
+            <includes>
+                <include>startup.sh</include>
+            </includes>
+            <!--指定文件集合的输出目录，该目录是相对于根目录-->
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/main/resources/bin</directory>
+            <includes>
+                <include>deploy.sh</include>
+            </includes>
+            <outputDirectory>.</outputDirectory>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+
+        <fileSet>
+            <!-- 将项目中src/main/resources目录下的资源文件copy到target目录的config目录下 -->
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>*.properties</include>
+                <include>*.xml</include>
+                <include>*.yml</include>
+            </includes>
+            <outputDirectory>config</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+    </fileSets>
+
+    <!--指定目的文件名到指定目录-->
+    <files>
+        <file>
+            <source>target/${project.artifactId}-${project.version}.jar.original</source>
+            <destName>${project.artifactId}.jar</destName>
+            <outputDirectory>.</outputDirectory>
+        </file>
+    </files>
+
+    <!--定制工程依赖 jar 包的打包方式-->
+    <dependencySets>
+        <dependencySet>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <useProjectArtifact>false</useProjectArtifact>
+            <!--指定包依赖目录，该目录是相对于根目录-->
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>
